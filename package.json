@@ -20,10 +20,9 @@
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"
   },
   "dependencies": {
-    "acorn-jsx": "^5.1.0",
+    "@chadfawcett/probot-serverless-now": "^1.0.0",
     "lodash.get": "^4.4.2",
-    "probot": "^7.2.0",
-    "probot-serverless-now": "^2.1.1"
+    "probot": "^7.2.0"
   },
   "devDependencies": {
     "jest": "^24.0.0",
