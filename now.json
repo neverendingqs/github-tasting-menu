@@ -1,8 +1,8 @@
 {
   "env": {
-    "APP_ID": "@my-app-id",
-    "PRIVATE_KEY": "@my-app-base64-encoded-private-key",
-    "WEBHOOK_SECRET": "@my-app-webhook-secret"
+    "APP_ID": "@github-tasting-menu-app-id",
+    "PRIVATE_KEY": "@github-tasting-menu-private-key",
+    "WEBHOOK_SECRET": "@github-tasting-menu-webhook-secret"
   },
   "version": 2
 }
