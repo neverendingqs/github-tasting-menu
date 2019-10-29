@@ -33,7 +33,7 @@ async function verifyUsers(context, users) {
         default:
           nonCollaborators.push(username);
       }
-    } catch {
+    } catch(err) {
       nonCollaborators.push(username);
     }
   }

@@ -1,0 +1,8 @@
+{
+  "env": {
+    "APP_ID": "@my-app-id",
+    "PRIVATE_KEY": "@my-app-base64-encoded-private-key",
+    "WEBHOOK_SECRET": "@my-app-webhook-secret"
+  },
+  "version": 2
+}
