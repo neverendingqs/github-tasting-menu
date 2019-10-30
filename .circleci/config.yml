@@ -40,7 +40,7 @@ jobs:
     executor: node
     steps:
       - *attach_workspace
-      - run: npm run now -- -n github-tasting-menu -t $ZEIT_NOW_TOKEN
+      - run: npm run --silent now -- -n github-tasting-menu -t $ZEIT_NOW_TOKEN
 
 workflows:
   version: 2
