@@ -54,7 +54,7 @@ workflows:
           context: zeit-now
           requires:
             - test
-#           filters:
-#             branches:
-#               only:
-#                 - master
+          filters:
+            branches:
+              only:
+                - master
