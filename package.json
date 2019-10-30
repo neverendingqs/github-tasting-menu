@@ -14,8 +14,9 @@
   ],
   "scripts": {
     "dev": "nodemon",
-    "start": "probot run ./index.js",
     "lint": "standard --fix",
+    "now": "now",
+    "start": "probot run ./index.js",
     "test": "jest && standard",
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"
   },
@@ -28,6 +29,7 @@
     "jest": "^24.0.0",
     "nock": "^10.0.0",
     "nodemon": "^1.17.2",
+    "now": "^16.4.4",
     "smee-client": "^1.0.2",
     "standard": "^12.0.1"
   },
