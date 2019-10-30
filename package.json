@@ -14,6 +14,7 @@
   ],
   "scripts": {
     "dev": "nodemon",
+    "now-build": "npm install",
     "start": "probot run ./index.js",
     "lint": "standard --fix",
     "test": "jest && standard",
