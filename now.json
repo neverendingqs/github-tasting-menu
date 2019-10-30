@@ -1,0 +1,10 @@
+{
+  "builds": [{ "src": "now.js", "use": "@now/node" }],
+  "env": {
+    "APP_ID": "@github-tasting-menu-app-id",
+    "PRIVATE_KEY": "@github-tasting-menu-private-key-base64",
+    "WEBHOOK_SECRET": "@github-tasting-menu-webhook-secret"
+  },
+  "routes": [{ "src": "/", "dest": "/now.js" }],
+  "version": 2
+}
