@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/neverendingqs/github-tasting-menu.svg?style=svg)](https://circleci.com/gh/neverendingqs/github-tasting-menu)
+
 # Tasting Menu GitHub App
 
 ## How it Works
