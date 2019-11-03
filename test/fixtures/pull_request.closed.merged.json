@@ -1,0 +1,16 @@
+{
+  "action": "closed",
+  "pull_request": {
+    "number": 1,
+    "user": {
+      "login": "hiimbex"
+    },
+    "merged": true
+  },
+  "repository": {
+    "name": "testing-things",
+    "owner": {
+      "login": "hiimbex"
+    }
+  }
+}

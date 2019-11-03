@@ -7,6 +7,7 @@ const { Probot } = require('probot')
 // Requiring our fixtures
 const payloads = {
   pull_request: {
+    merged: require('./fixtures/pull_request.closed.merged'),
     unmerged: require('./fixtures/pull_request.closed.unmerged')
   }
 }
@@ -31,12 +32,25 @@ describe('Tasting Menu', () => {
     }
   })
 
-  test('does nothing if the pull request is not merged', async () => {
-    // Receive a webhook event
-    await this.probot.receive({
-      name: 'pull_request',
-      payload: payloads.pull_request.unmerged
+  describe('pull_request', () => {
+
+    test('does nothing if the pull request is not merged on close', async () => {
+      const payload = payloads.pull_request.unmerged
+      // Receive a webhook event
+      await this.probot.receive({ name: 'pull_request', payload })
     })
+
+    test('comments back based on config if pull request is merged on close', async () => {
+      const payload = payloads.pull_request.merged
+
+      nock('https://api.github.com')
+        .get(`/repos/hiimbex/testing-things/contents/.github/tasting-menu.yml`)
+        .reply(200)
+
+      // Receive a webhook event
+      await this.probot.receive({ name: 'pull_request', payload })
+    })
+
   })
 })
 
