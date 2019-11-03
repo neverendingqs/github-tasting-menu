@@ -136,6 +136,26 @@ describe('Tasting Menu', () => {
       await this.probot.receive({ name: 'pull_request', payload })
     })
 
+    test('skips users based on their frequency', async () => {
+      jest.spyOn(Math, 'random').mockReturnValue(0.6)
+
+      try {
+        const config = this.createConfig([
+          { username: 'user1', frequency: 0.5 },
+          { username: 'user2', frequency: 0.75 }
+        ])
+        this.setup.configRoute(200, config)
+
+        this.setup.collaboratorsRoute('user2')
+        this.setup.issuesRoute(`cc: @user2\n\n`)
+
+        const payload = events.pull_request.closed.merged
+        await this.probot.receive({ name: 'pull_request', payload })
+      } finally {
+        global.Math.random.mockRestore();
+      }
+    })
+
     test('notifies appropriately when there are collaborators and non-collaborators', async () => {
       jest.setTimeout(10000)
       const collaborators = ['user1', 'user2']
