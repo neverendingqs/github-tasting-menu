@@ -13,11 +13,10 @@ const apiDomain = 'https://api.github.com'
 nock.disableNetConnect()
 
 describe('Tasting Menu', () => {
-
   beforeEach(() => {
-    this.probot = probot = new Probot({})
+    this.probot = new Probot({})
     // Load our app into probot
-    const app = probot.load(myProbotApp)
+    const app = this.probot.load(myProbotApp)
 
     // just return a test token
     app.app = () => 'test'
@@ -32,11 +31,11 @@ describe('Tasting Menu', () => {
 
   describe('pull_request', () => {
     this.setup = {
-      configRoute(statusCode, config) {
+      configRoute (statusCode, config) {
         const { repositoryName, repositoryOwner } = metadata
         const endpoint = `/repos/${repositoryOwner}/${repositoryName}/contents/.github/tasting-menu.yml`
 
-        if(config) {
+        if (config) {
           const responseBody = api.createContentsResponse(
             yaml.safeDump(config)
           )
@@ -50,16 +49,16 @@ describe('Tasting Menu', () => {
             .reply(statusCode)
         }
       },
-      collaboratorsRoute(username, statusCode = 204) {
-        const { repositoryName, repositoryOwner } = metadata;
+      collaboratorsRoute (username, statusCode = 204) {
+        const { repositoryName, repositoryOwner } = metadata
         const endpoint = `/repos/${repositoryOwner}/${repositoryName}/collaborators/${username}`
 
         nock(apiDomain)
           .get(endpoint)
           .reply(statusCode)
       },
-      issuesRoute(expectedBody) {
-        const { issueNum, repositoryName, repositoryOwner } = metadata;
+      issuesRoute (expectedBody) {
+        const { issueNum, repositoryName, repositoryOwner } = metadata
         const endpoint = `/repos/${repositoryOwner}/${repositoryName}/issues/${issueNum}/comments`
 
         nock(apiDomain)
@@ -107,7 +106,7 @@ describe('Tasting Menu', () => {
       await this.probot.receive({ name: 'pull_request', payload })
     })
 
-    test('notifies when all users were chosen', async() => {
+    test('notifies when all users were chosen', async () => {
       const users = ['user1', 'user2']
 
       const config = this.createConfig(
@@ -122,7 +121,7 @@ describe('Tasting Menu', () => {
       await this.probot.receive({ name: 'pull_request', payload })
     })
 
-    test('notifies users are not a collaborator', async() => {
+    test('notifies users are not a collaborator', async () => {
       const users = ['user1', 'user2']
 
       const config = this.createConfig(
@@ -137,15 +136,23 @@ describe('Tasting Menu', () => {
       await this.probot.receive({ name: 'pull_request', payload })
     })
 
-    test('notifies appropriately when there are collaborators and non-collaborators', async() => {
-      const config = this.createConfig([
-        { username: 'user1', frequency: 1 },
-        { username: 'user2', frequency: 1 }
-      ])
+    test('notifies appropriately when there are collaborators and non-collaborators', async () => {
+      jest.setTimeout(10000);
+      const collaborators = ['user1', 'user2']
+      const nonCollaborators = ['user3', 'user4']
+
+      const config = this.createConfig(
+        [...collaborators, ...nonCollaborators].map(username => ({ username, frequency: 1 }))
+      )
       this.setup.configRoute(200, config)
-      this.setup.collaboratorsRoute('user1')
-      this.setup.collaboratorsRoute('user2', 404)
-      this.setup.issuesRoute(`cc: @user1\n\nNon-collaborators / non-existent users that were not notified: \n\n - user2`)
+
+      collaborators.forEach(username => this.setup.collaboratorsRoute(username))
+      nonCollaborators.forEach(username => this.setup.collaboratorsRoute(username, 404))
+
+      this.setup.issuesRoute(
+        `cc: @${collaborators.join(' @')}\n\n` +
+        `Non-collaborators / non-existent users that were not notified: \n\n - ${nonCollaborators.join('\n - ')}`
+      )
 
       const payload = events.pull_request.closed.merged
       await this.probot.receive({ name: 'pull_request', payload })

@@ -3,7 +3,7 @@ const repositoryName = 'repository-name'
 const repositoryOwner = 'repository-owner'
 const username = 'username'
 
-function createContentsResponse(stringContent) {
+function createContentsResponse (stringContent) {
   const content = Buffer.from(stringContent).toString('base64')
   return {
     type: 'file',
@@ -13,7 +13,7 @@ function createContentsResponse(stringContent) {
   }
 }
 
-function createPullRequestEvent(merged = true) {
+function createPullRequestEvent (merged = true) {
   return {
     action: 'closed',
     pull_request: {
