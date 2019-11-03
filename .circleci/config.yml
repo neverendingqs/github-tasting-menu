@@ -34,7 +34,7 @@ jobs:
     executor: node
     steps:
       - *attach_workspace
-      - run: npm run test
+      - run: npm run test:ci
 
   deploy:
     executor: node

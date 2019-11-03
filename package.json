@@ -17,7 +17,9 @@
     "lint": "standard --fix",
     "now": "now",
     "start": "probot run ./index.js",
-    "test": "jest && standard",
+    "test": "jest --coverage",
+    "posttest": "standard",
+    "test:ci": "npm test && cat coverage/lcov.info | coveralls",
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"
   },
   "dependencies": {
@@ -26,6 +28,7 @@
     "probot": "^7.2.0"
   },
   "devDependencies": {
+    "coveralls": "^3.0.7",
     "jest": "^24.0.0",
     "js-yaml": "^3.13.1",
     "nock": "^10.0.0",
