@@ -1,18 +1,22 @@
 const nock = require('nock')
+
 // Requiring our app implementation
 const myProbotApp = require('..')
 const { Probot } = require('probot')
+
 // Requiring our fixtures
-const payload = require('./fixtures/issues.opened')
-const issueCreatedBody = { body: 'Thanks for opening this issue!' }
+const payloads = {
+  pull_request: {
+    unmerged: require('./fixtures/pull_request.closed.unmerged')
+  }
+}
 
 nock.disableNetConnect()
 
-describe('My Probot app', () => {
-  let probot
+describe('Tasting Menu', () => {
 
   beforeEach(() => {
-    probot = new Probot({})
+    this.probot = probot = new Probot({})
     // Load our app into probot
     const app = probot.load(myProbotApp)
 
@@ -20,22 +24,19 @@ describe('My Probot app', () => {
     app.app = () => 'test'
   })
 
-  test('creates a comment when an issue is opened', async () => {
-    // Test that we correctly return a test token
-    nock('https://api.github.com')
-      .post('/app/installations/2/access_tokens')
-      .reply(200, { token: 'test' })
+  afterEach(() => {
+    if (!nock.isDone()) {
+      nock.cleanAll()
+      throw new Error('Not all nock interceptors were used!')
+    }
+  })
 
-    // Test that a comment is posted
-    nock('https://api.github.com')
-      .post('/repos/hiimbex/testing-things/issues/1/comments', (body) => {
-        expect(body).toMatchObject(issueCreatedBody)
-        return true
-      })
-      .reply(200)
-
+  test('does nothing if the pull request is not merged', async () => {
     // Receive a webhook event
-    await probot.receive({ name: 'issues', payload })
+    await this.probot.receive({
+      name: 'pull_request',
+      payload: payloads.pull_request.unmerged
+    })
   })
 })
 
