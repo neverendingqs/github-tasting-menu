@@ -152,7 +152,7 @@ describe('Tasting Menu', () => {
         const payload = events.pull_request.closed.merged
         await this.probot.receive({ name: 'pull_request', payload })
       } finally {
-        global.Math.random.mockRestore();
+        global.Math.random.mockRestore()
       }
     })
 
