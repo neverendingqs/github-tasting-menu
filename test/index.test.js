@@ -49,25 +49,31 @@ describe('Tasting Menu', () => {
             .get(endpoint)
             .reply(statusCode)
         }
-    },
-    issuesRoute(expectedBody) {
-      const { issueNum, repositoryName, repositoryOwner } = metadata;
-      const endpoint = `/repos/${repositoryOwner}/${repositoryName}/issues/${issueNum}/comments`
+      },
+      collaboratorsRoute(username, statusCode = 204) {
+        const { repositoryName, repositoryOwner } = metadata;
+        const endpoint = `/repos/${repositoryOwner}/${repositoryName}/collaborators/${username}`
 
-      nock(apiDomain)
-        .post(endpoint, body => {
-          expect(body).toMatchObject({ body: expectedBody })
-          return true
-        })
-        .reply(200)
+        nock(apiDomain)
+          .get(endpoint)
+          .reply(statusCode)
+      },
+      issuesRoute(expectedBody) {
+        const { issueNum, repositoryName, repositoryOwner } = metadata;
+        const endpoint = `/repos/${repositoryOwner}/${repositoryName}/issues/${issueNum}/comments`
+
+        nock(apiDomain)
+          .post(endpoint, body => {
+            expect(body).toMatchObject({ body: expectedBody })
+            return true
+          })
+          .reply(200)
+      }
     }
-  }
 
-  this.createConfig = frequencies => ({
-    pull_request: { merged: frequencies }
-  })
-
-    this.setup
+    this.createConfig = frequencies => ({
+      pull_request: { merged: frequencies }
+    })
 
     test('does nothing if the pull request is not merged on close', async () => {
       const payload = events.pull_request.closed.unmerged
@@ -91,12 +97,26 @@ describe('Tasting Menu', () => {
     })
 
     test('notifies when no users were chosen to be cc\'ed', async () => {
-      const config = this.createConfig([{
-        username: 'user1',
-        frequency: 0
-      }])
+      const config = this.createConfig([
+        { username: 'user1', frequency: 0 }
+      ])
       this.setup.configRoute(200, config)
       this.setup.issuesRoute('No collaborators were chosen for this pull request.')
+
+      const payload = events.pull_request.closed.merged
+      await this.probot.receive({ name: 'pull_request', payload })
+    })
+
+    test('notifies when all users were chosen', async() => {
+      const users = ['user1', 'user2']
+
+      const config = this.createConfig(
+        users.map(username => ({ username, frequency: 1 }))
+      )
+      this.setup.configRoute(200, config)
+
+      users.forEach(username => this.setup.collaboratorsRoute(username))
+      this.setup.issuesRoute(`cc: @${users.join(' @')}\n\n`)
 
       const payload = events.pull_request.closed.merged
       await this.probot.receive({ name: 'pull_request', payload })
