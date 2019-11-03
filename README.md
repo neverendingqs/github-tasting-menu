@@ -1,4 +1,5 @@
 [![CircleCI](https://circleci.com/gh/neverendingqs/github-tasting-menu.svg?style=svg)](https://circleci.com/gh/neverendingqs/github-tasting-menu)
+[![Coverage Status](https://coveralls.io/repos/github/neverendingqs/github-tasting-menu/badge.svg?branch=master)](https://coveralls.io/github/neverendingqs/github-tasting-menu?branch=master)
 
 # Tasting Menu GitHub App
 
