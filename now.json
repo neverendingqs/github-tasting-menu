@@ -3,7 +3,7 @@
   "env": {
     "APP_ID": "@github-tasting-menu-app-id",
     "PRIVATE_KEY": "@github-tasting-menu-private-key-base64",
-    "SENTRY_DSN": "github-tasting-menu-sentry-dsn",
+    "SENTRY_DSN": "@github-tasting-menu-sentry-dsn",
     "WEBHOOK_SECRET": "@github-tasting-menu-webhook-secret"
   },
   "routes": [{ "src": "/", "dest": "/now.js" }],
