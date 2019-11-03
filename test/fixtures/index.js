@@ -1,3 +1,4 @@
+const issueNum = 5
 const repositoryName = 'repository-name'
 const repositoryOwner = 'repository-owner'
 const username = 'username'
@@ -16,7 +17,7 @@ function createPullRequestEvent(merged = true) {
   return {
     action: 'closed',
     pull_request: {
-      number: 5,
+      number: issueNum,
       user: { login: username },
       merged
     },
@@ -40,6 +41,7 @@ module.exports = {
     }
   },
   metadata: {
+    issueNum,
     repositoryName,
     repositoryOwner,
     username

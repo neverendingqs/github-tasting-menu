@@ -1,4 +1,5 @@
 const nock = require('nock')
+const yaml = require('js-yaml')
 
 // Requiring our app implementation
 const myProbotApp = require('..')
@@ -7,18 +8,7 @@ const { Probot } = require('probot')
 // Requiring our fixtures
 const { api, events, metadata } = require('./fixtures')
 
-const config = `
-pull_request:
-  merged:
-    - username: github-username-1
-      frequency: 0.5
-    - username: github-username-2
-      frequency: 0.25
-    - username: github-username-3
-      frequency: 0.33
-    - username: github-username-4
-      frequency: 0.75
-`
+const apiDomain = 'https://api.github.com'
 
 nock.disableNetConnect()
 
@@ -41,6 +31,43 @@ describe('Tasting Menu', () => {
   })
 
   describe('pull_request', () => {
+    this.setup = {
+      configRoute(statusCode, config) {
+        const { repositoryName, repositoryOwner } = metadata
+        const endpoint = `/repos/${repositoryOwner}/${repositoryName}/contents/.github/tasting-menu.yml`
+
+        if(config) {
+          const responseBody = api.createContentsResponse(
+            yaml.safeDump(config)
+          )
+
+          nock(apiDomain)
+            .get(endpoint)
+            .reply(statusCode, responseBody)
+        } else {
+          nock(apiDomain)
+            .get(endpoint)
+            .reply(statusCode)
+        }
+    },
+    issuesRoute(expectedBody) {
+      const { issueNum, repositoryName, repositoryOwner } = metadata;
+      const endpoint = `/repos/${repositoryOwner}/${repositoryName}/issues/${issueNum}/comments`
+
+      nock(apiDomain)
+        .post(endpoint, body => {
+          expect(body).toMatchObject({ body: expectedBody })
+          return true
+        })
+        .reply(200)
+    }
+  }
+
+  this.createConfig = frequencies => ({
+    pull_request: { merged: frequencies }
+  })
+
+    this.setup
 
     test('does nothing if the pull request is not merged on close', async () => {
       const payload = events.pull_request.closed.unmerged
@@ -48,12 +75,37 @@ describe('Tasting Menu', () => {
       await this.probot.receive({ name: 'pull_request', payload })
     })
 
-    test('comments back based on config if pull request is merged on close', async () => {
-      const { repositoryName, repositoryOwner } = metadata;
+    test('does nothing if config does not exist', async () => {
+      this.setup.configRoute(404)
 
-      nock('https://api.github.com')
-        .get(`/repos/${repositoryOwner}/${repositoryName}/contents/.github/tasting-menu.yml`)
-        .reply(200, api.createContentsResponse(config))
+      const payload = events.pull_request.closed.merged
+      await this.probot.receive({ name: 'pull_request', payload })
+    })
+
+    test('does nothing if config file does not contain relevant configs', async () => {
+      const config = yaml.safeDump({ pull_request: { notRelevant: {} } })
+      this.setup.configRoute(200, config)
+
+      const payload = events.pull_request.closed.merged
+      await this.probot.receive({ name: 'pull_request', payload })
+    })
+
+    test('notifies when no users were chosen to be cc\'ed', async () => {
+      const config = this.createConfig([{
+        username: 'user1',
+        frequency: 0
+      }])
+      this.setup.configRoute(200, config)
+      this.setup.issuesRoute('No collaborators were chosen for this pull request.')
+
+      const payload = events.pull_request.closed.merged
+      await this.probot.receive({ name: 'pull_request', payload })
+    })
+
+    test('comments back based on config if pull request is merged on close', async () => {
+      throw new Error()
+      const config = yaml.safeDump({ pull_request: { notRelevant: {} } })
+      this.setup.configRoute(200, config)
 
       // Receive a webhook event
       const payload = events.pull_request.closed.merged
