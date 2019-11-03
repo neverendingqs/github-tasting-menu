@@ -122,16 +122,34 @@ describe('Tasting Menu', () => {
       await this.probot.receive({ name: 'pull_request', payload })
     })
 
-    test('comments back based on config if pull request is merged on close', async () => {
-      throw new Error()
-      const config = yaml.safeDump({ pull_request: { notRelevant: {} } })
+    test('notifies users are not a collaborator', async() => {
+      const users = ['user1', 'user2']
+
+      const config = this.createConfig(
+        users.map(username => ({ username, frequency: 1 }))
+      )
       this.setup.configRoute(200, config)
 
-      // Receive a webhook event
+      users.forEach(username => this.setup.collaboratorsRoute(username, 404))
+      this.setup.issuesRoute(`Non-collaborators / non-existent users that were not notified: \n\n - ${users.join('\n - ')}`)
+
       const payload = events.pull_request.closed.merged
       await this.probot.receive({ name: 'pull_request', payload })
     })
 
+    test('notifies appropriately when there are collaborators and non-collaborators', async() => {
+      const config = this.createConfig([
+        { username: 'user1', frequency: 1 },
+        { username: 'user2', frequency: 1 }
+      ])
+      this.setup.configRoute(200, config)
+      this.setup.collaboratorsRoute('user1')
+      this.setup.collaboratorsRoute('user2', 404)
+      this.setup.issuesRoute(`cc: @user1\n\nNon-collaborators / non-existent users that were not notified: \n\n - user2`)
+
+      const payload = events.pull_request.closed.merged
+      await this.probot.receive({ name: 'pull_request', payload })
+    })
   })
 })
 
