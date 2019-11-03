@@ -5,12 +5,20 @@ const myProbotApp = require('..')
 const { Probot } = require('probot')
 
 // Requiring our fixtures
-const payloads = {
-  pull_request: {
-    merged: require('./fixtures/pull_request.closed.merged'),
-    unmerged: require('./fixtures/pull_request.closed.unmerged')
-  }
-}
+const { api, events, metadata } = require('./fixtures')
+
+const config = `
+pull_request:
+  merged:
+    - username: github-username-1
+      frequency: 0.5
+    - username: github-username-2
+      frequency: 0.25
+    - username: github-username-3
+      frequency: 0.33
+    - username: github-username-4
+      frequency: 0.75
+`
 
 nock.disableNetConnect()
 
@@ -35,19 +43,20 @@ describe('Tasting Menu', () => {
   describe('pull_request', () => {
 
     test('does nothing if the pull request is not merged on close', async () => {
-      const payload = payloads.pull_request.unmerged
+      const payload = events.pull_request.closed.unmerged
       // Receive a webhook event
       await this.probot.receive({ name: 'pull_request', payload })
     })
 
     test('comments back based on config if pull request is merged on close', async () => {
-      const payload = payloads.pull_request.merged
+      const { repositoryName, repositoryOwner } = metadata;
 
       nock('https://api.github.com')
-        .get(`/repos/hiimbex/testing-things/contents/.github/tasting-menu.yml`)
-        .reply(200)
+        .get(`/repos/${repositoryOwner}/${repositoryName}/contents/.github/tasting-menu.yml`)
+        .reply(200, api.createContentsResponse(config))
 
       // Receive a webhook event
+      const payload = events.pull_request.closed.merged
       await this.probot.receive({ name: 'pull_request', payload })
     })
 
