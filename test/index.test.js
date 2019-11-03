@@ -137,7 +137,7 @@ describe('Tasting Menu', () => {
     })
 
     test('notifies appropriately when there are collaborators and non-collaborators', async () => {
-      jest.setTimeout(10000);
+      jest.setTimeout(10000)
       const collaborators = ['user1', 'user2']
       const nonCollaborators = ['user3', 'user4']
 
