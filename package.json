@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Only be notified of a percentage of actions in a GitHub repository.",
   "author": "neverendingqs <neverendingqs@users.noreply.github.com> (https://github.com/neverendingqs/github-tasting-menu)",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "repository": "https://github.com//github-tasting-menu.git",
   "homepage": "https://github.com//github-tasting-menu",
   "bugs": "https://github.com//github-tasting-menu/issues",
