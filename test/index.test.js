@@ -147,7 +147,7 @@ describe('Tasting Menu', () => {
         this.setup.configRoute(200, config)
 
         this.setup.collaboratorsRoute('user2')
-        this.setup.issuesRoute(`cc: @user2\n\n`)
+        this.setup.issuesRoute('cc: @user2\n\n')
 
         const payload = events.pull_request.closed.merged
         await this.probot.receive({ name: 'pull_request', payload })
