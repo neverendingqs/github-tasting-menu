@@ -19,11 +19,14 @@ describe('Tasting Menu', () => {
     const app = this.probot.load(myProbotApp)
 
     // just return a test token
-    app.app = () => 'test'
+    app.app = {
+      getSignedJsonWebToken: () => 'test'
+    }
   })
 
   afterEach(() => {
     if (!nock.isDone()) {
+      console.log(nock.pendingMocks())
       nock.cleanAll()
       throw new Error('Not all nock interceptors were used!')
     }
@@ -83,13 +86,19 @@ describe('Tasting Menu', () => {
     test('does nothing if config does not exist', async () => {
       this.setup.configRoute(404)
 
+      const { repositoryOwner } = metadata
+      // Checks for a global '.github' repo if local repo doesn't contain a config
+      // https://github.com/probot/probot/issues/1051
+      nock(apiDomain)
+        .get(`/repos/${repositoryOwner}/.github/contents/.github/tasting-menu.yml`)
+        .reply(404)
+
       const payload = events.pull_request.closed.merged
       await this.probot.receive({ name: 'pull_request', payload })
     })
 
     test('does nothing if config file does not contain relevant configs', async () => {
-      const config = yaml.safeDump({ pull_request: { notRelevant: {} } })
-      this.setup.configRoute(200, config)
+      this.setup.configRoute(200, { pull_request: { notRelevant: {} } })
 
       const payload = events.pull_request.closed.merged
       await this.probot.receive({ name: 'pull_request', payload })
