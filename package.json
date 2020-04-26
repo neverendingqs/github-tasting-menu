@@ -28,8 +28,8 @@
     "probot": "^9.11.3"
   },
   "devDependencies": {
-    "coveralls": "^3.0.11",
-    "jest": "^25.3.0",
+    "coveralls": "^3.1.0",
+    "jest": "^25.4.0",
     "js-yaml": "^3.13.1",
     "nock": "^12.0.3",
     "nodemon": "^2.0.3",
