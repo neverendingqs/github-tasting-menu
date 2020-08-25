@@ -25,16 +25,16 @@
   "dependencies": {
     "@chadfawcett/probot-serverless-now": "^1.0.0",
     "lodash.get": "^4.4.2",
-    "probot": "^9.13.0"
+    "probot": "^9.14.1"
   },
   "devDependencies": {
     "coveralls": "^3.1.0",
-    "jest": "^26.4.0",
+    "jest": "^26.4.2",
     "js-yaml": "^3.14.0",
     "nock": "^13.0.4",
     "nodemon": "^2.0.4",
-    "now": "^19.2.0",
-    "smee-client": "^1.1.0",
+    "now": "^20.0.0",
+    "smee-client": "^1.2.2",
     "standard": "^14.3.4"
   },
   "engines": {
