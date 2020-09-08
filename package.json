@@ -25,7 +25,7 @@
   "dependencies": {
     "@chadfawcett/probot-serverless-now": "^1.0.0",
     "lodash.get": "^4.4.2",
-    "probot": "^9.14.1"
+    "probot": "^10.2.0"
   },
   "devDependencies": {
     "coveralls": "^3.1.0",
