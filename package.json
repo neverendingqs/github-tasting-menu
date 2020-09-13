@@ -15,12 +15,12 @@
   "scripts": {
     "dev": "nodemon",
     "lint": "standard --fix",
-    "now": "now",
     "start": "probot run ./index.js",
     "test": "jest --coverage",
     "posttest": "standard",
     "test:ci": "npm test && cat coverage/lcov.info | coveralls",
-    "test:watch": "jest --watch --notify --notifyMode=change --coverage"
+    "test:watch": "jest --watch --notify --notifyMode=change --coverage",
+    "vercel": "vercel"
   },
   "dependencies": {
     "lodash.get": "^4.4.2",
@@ -32,12 +32,12 @@
     "js-yaml": "^3.14.0",
     "nock": "^13.0.4",
     "nodemon": "^2.0.4",
-    "now": "^20.1.0",
     "smee-client": "^1.2.2",
-    "standard": "^14.3.4"
+    "standard": "^14.3.4",
+    "vercel": "^20.1.0"
   },
   "engines": {
-    "node": ">= 12.16.1"
+    "node": ">= 12.18.3"
   },
   "standard": {
     "env": [
