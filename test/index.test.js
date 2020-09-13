@@ -3,25 +3,30 @@ const yaml = require('js-yaml')
 
 // Requiring our app implementation
 const myProbotApp = require('..')
-const { Probot } = require('probot')
+const { Probot, ProbotOctokit } = require('probot')
 
 // Requiring our fixtures
 const { api, events, metadata } = require('./fixtures')
 
 const apiDomain = 'https://api.github.com'
 
-nock.disableNetConnect()
-
 describe('Tasting Menu', () => {
   beforeEach(() => {
-    this.probot = new Probot({})
-    // Load our app into probot
-    const app = this.probot.load(myProbotApp)
+    // https://probot.github.io/docs/testing/
+    nock.disableNetConnect()
 
-    // just return a test token
-    app.app = {
-      getSignedJsonWebToken: () => 'test'
-    }
+    this.probot = new Probot({
+      id: 1,
+      githubToken: 'test',
+      // Disable throttling & retrying requests for easier testing
+      Octokit: ProbotOctokit.defaults({
+        retry: { enabled: false },
+        throttle: { enabled: false }
+      })
+    })
+
+    // Load our app into probot
+    this.probot.load(myProbotApp)
   })
 
   afterEach(() => {
@@ -36,7 +41,9 @@ describe('Tasting Menu', () => {
     this.setup = {
       configRoute (statusCode, config) {
         const { repositoryName, repositoryOwner } = metadata
-        const endpoint = `/repos/${repositoryOwner}/${repositoryName}/contents/.github/tasting-menu.yml`
+        // `%2F` instead of `/`
+        // https://github.com/probot/probot/releases/tag/v10.0.0
+        const endpoint = `/repos/${repositoryOwner}/${repositoryName}/contents/.github%2Ftasting-menu.yml`
 
         if (config) {
           const responseBody = api.createContentsResponse(
@@ -90,7 +97,7 @@ describe('Tasting Menu', () => {
       // Checks for a global '.github' repo if local repo doesn't contain a config
       // https://github.com/probot/probot/issues/1051
       nock(apiDomain)
-        .get(`/repos/${repositoryOwner}/.github/contents/.github/tasting-menu.yml`)
+        .get(`/repos/${repositoryOwner}/.github/contents/.github%2Ftasting-menu.yml`)
         .reply(404)
 
       const payload = events.pull_request.closed.merged
