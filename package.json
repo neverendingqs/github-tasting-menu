@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "lodash.get": "^4.4.2",
-    "probot": "^10.9.1"
+    "probot": "^10.9.3"
   },
   "devDependencies": {
     "coveralls": "^3.1.0",
