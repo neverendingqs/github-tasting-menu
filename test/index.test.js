@@ -6,7 +6,7 @@ const myProbotApp = require('..')
 const { Probot, ProbotOctokit } = require('probot')
 
 // Requiring our fixtures
-const { api, events, metadata } = require('./fixtures')
+const { events, metadata } = require('./fixtures')
 
 const apiDomain = 'https://api.github.com'
 
@@ -46,9 +46,7 @@ describe('Tasting Menu', () => {
         const endpoint = `/repos/${repositoryOwner}/${repositoryName}/contents/.github%2Ftasting-menu.yml`
 
         if (config) {
-          const responseBody = api.createContentsResponse(
-            yaml.safeDump(config)
-          )
+          const responseBody = yaml.safeDump(config)
 
           nock(apiDomain)
             .get(endpoint)

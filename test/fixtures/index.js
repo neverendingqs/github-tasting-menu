@@ -3,16 +3,6 @@ const repositoryName = 'repository-name'
 const repositoryOwner = 'repository-owner'
 const username = 'username'
 
-function createContentsResponse (stringContent) {
-  const content = Buffer.from(stringContent).toString('base64')
-  return {
-    type: 'file',
-    encoding: 'base64',
-    size: content.length,
-    content
-  }
-}
-
 function createPullRequestEvent (merged = true) {
   return {
     action: 'closed',
@@ -29,9 +19,6 @@ function createPullRequestEvent (merged = true) {
 }
 
 module.exports = {
-  api: {
-    createContentsResponse
-  },
   events: {
     pull_request: {
       closed: {
