@@ -23,6 +23,7 @@
     "vercel": "vercel"
   },
   "dependencies": {
+    "@probot/get-private-key": "^1.1.0",
     "lodash.get": "^4.4.2",
     "probot": "^10.18.0"
   },
