@@ -4,7 +4,7 @@ const { findPrivateKey } = require('probot/lib/helpers/get-private-key')
 
 const app = require('./')
 const probot = createProbot({
-  id: process.env.APP_ID,
+  appId: process.env.APP_ID,
   secret: process.env.WEBHOOK_SECRET,
   cert: findPrivateKey()
 })
