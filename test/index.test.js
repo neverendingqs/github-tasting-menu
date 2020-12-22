@@ -16,7 +16,7 @@ describe('Tasting Menu', () => {
     nock.disableNetConnect()
 
     this.probot = new Probot({
-      appId: 1,
+      id: 1,
       githubToken: 'test',
       // Disable throttling & retrying requests for easier testing
       Octokit: ProbotOctokit.defaults({

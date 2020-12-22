@@ -20,7 +20,7 @@ async function verifyUsers (context, users) {
 
   for (const username of users) {
     try {
-      const response = await context.octokit.repos.checkCollaborator({
+      const response = await context.github.repos.checkCollaborator({
         owner: context.payload.repository.owner.login,
         repo: context.payload.repository.name,
         username
@@ -77,6 +77,6 @@ module.exports = app => {
     const body = constructBody(collaborators, nonCollaborators) || 'No collaborators were chosen for this pull request.'
 
     const issueComment = context.issue({ body })
-    return context.octokit.issues.createComment(issueComment)
+    return context.github.issues.createComment(issueComment)
   })
 }
