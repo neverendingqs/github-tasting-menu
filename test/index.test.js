@@ -46,7 +46,7 @@ describe('Tasting Menu', () => {
         const endpoint = `/repos/${repositoryOwner}/${repositoryName}/contents/.github%2Ftasting-menu.yml`
 
         if (config) {
-          const responseBody = yaml.safeDump(config)
+          const responseBody = yaml.dump(config)
 
           nock(apiDomain)
             .get(endpoint)
