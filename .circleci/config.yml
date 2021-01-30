@@ -43,6 +43,7 @@ jobs:
       - run: mkdir .vercel/
       - run: echo "{\"projectId\":\"${NOW_PROJECT_ID}\",\"orgId\":\"${NOW_ORG_ID}\"}" > .vercel/project.json
       - run: npm run --silent vercel -- -t $ZEIT_NOW_TOKEN
+      - run: npm run --silent vercel -- -t $ZEIT_NOW_TOKEN --prod
 
 workflows:
   version: 2
