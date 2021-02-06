@@ -31,11 +31,11 @@
     "coveralls": "^3.1.0",
     "jest": "^26.6.3",
     "js-yaml": "^4.0.0",
-    "nock": "^13.0.6",
+    "nock": "^13.0.7",
     "nodemon": "^2.0.7",
     "smee-client": "^1.2.2",
     "standard": "^16.0.3",
-    "vercel": "^21.2.0"
+    "vercel": "^21.2.2"
   },
   "engines": {
     "node": ">= 12.18.3"
