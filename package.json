@@ -23,7 +23,7 @@
     "vercel": "vercel"
   },
   "dependencies": {
-    "@probot/get-private-key": "^1.1.0",
+    "@probot/get-private-key": "^1.1.1",
     "lodash.get": "^4.4.2",
     "probot": "^12.1.0"
   },
@@ -32,7 +32,7 @@
     "jest": "^27.0.6",
     "js-yaml": "^4.1.0",
     "nock": "^13.1.1",
-    "nodemon": "^2.0.9",
+    "nodemon": "^2.0.12",
     "smee-client": "^1.2.2",
     "standard": "^16.0.3",
     "vercel": "^23.0.1"
