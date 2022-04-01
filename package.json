@@ -25,17 +25,17 @@
   "dependencies": {
     "@probot/get-private-key": "^1.1.1",
     "lodash.get": "^4.4.2",
-    "probot": "^12.2.1"
+    "probot": "^12.2.2"
   },
   "devDependencies": {
     "coveralls": "^3.1.1",
-    "jest": "^27.4.7",
+    "jest": "^27.5.1",
     "js-yaml": "^4.1.0",
-    "nock": "^13.2.2",
+    "nock": "^13.2.4",
     "nodemon": "^2.0.15",
     "smee-client": "^1.2.2",
     "standard": "^16.0.4",
-    "vercel": "^23.1.2"
+    "vercel": "^24.0.1"
   },
   "engines": {
     "node": ">= 12.18.3"
