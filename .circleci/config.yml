@@ -10,7 +10,7 @@ references:
 executors:
   node:
     docker:
-      - image: circleci/node:12.18.3
+      - image: cimg/node:lts
     working_directory: *workspace
 
 jobs:
